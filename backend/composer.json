@@ -1,0 +1,12 @@
+{
+    "name": "olaurendeau/api",
+    "require": {
+        "swarrot/swarrot": "~2.2"
+    },
+    "authors": [
+        {
+            "name": "Olivier Laurendeau",
+            "email": "o.laurendeau@gmail.com"
+        }
+    ]
+}

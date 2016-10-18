@@ -1,0 +1,21 @@
+api:
+    build: ./backend/
+    command: bash -c "php composer.phar install && apache2-foreground"
+    volumes:
+        - ./backend/:/var/www/html/
+        - ./shared:/var/www/html/shared/
+    ports:
+        - 4445:80
+
+web:
+    image: "kyma/docker-nginx"
+    volumes:
+        - ./web/:/var/www
+        - ./shared:/var/www/shared/
+    ports:
+        - 4444:80
+
+rmq:
+    image: "rabbitmq:management"
+    ports:
+        - 15673:15672

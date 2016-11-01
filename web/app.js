@@ -8,11 +8,23 @@ class App extends React.Component {
                 name: this.state.name
             }
         };
-        this.log({id: request.id, message: <span>Invoice request sent, please wait for a while ...</span>});
+        this.log({
+            id: request.id,
+            message: <span>Invoice request sent, please wait for a while ...</span>
+        });
         $.post('http://localhost:4445/api.php', JSON.stringify(request), (response) => {
-            this.log({id: response.id, message: <span>Your invoice have been generated, <a target="_blank" href={response.result}>download it</a></span>});
+            this.log({
+                id: response.id,
+                message: <span>
+                    Your invoice have been generated,
+                    <a target="_blank" href={response.result}>download it</a>
+                </span>
+            });
         }, "json").fail((response) => {
-            this.log({id: response.id, message: <span>Failure</span>});
+            this.log({
+                id: response.id,
+                message: <span>Failure</span>
+            });
         });
     }
     log = (message) => {

@@ -18,4 +18,4 @@ web:
 rmq:
     image: "rabbitmq:management"
     ports:
-        - 15673:15672
+        - 15672:15672

@@ -8,7 +8,7 @@
 sleep(3);
 
 // Generate PDF
-copy(sprintf('%s/shared/Invoice_Template.pdf', __DIR__), sprintf('%s/shared/%s', __DIR__, $argv[1]));
+copy(sprintf('%s/shared/Invoice_Template.pdf', __DIR__), sprintf('%s/shared/generated_%s', __DIR__, $argv[1]));
 
 // Output file uri
-echo sprintf('/shared/%s', $argv[1]);
+echo sprintf('/shared/generated_%s', $argv[1]);

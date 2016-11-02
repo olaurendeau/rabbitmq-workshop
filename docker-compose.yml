@@ -16,7 +16,9 @@ web:
         - ./web/:/var/www
         - ./shared:/var/www/shared/
     ports:
-        - 4444:80
+        - 4446:80
+    links:
+        - api
 
 rmq:
     image: "rabbitmq:management"

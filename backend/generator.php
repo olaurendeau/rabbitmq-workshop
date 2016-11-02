@@ -5,7 +5,7 @@
 // Will generate an heavy.pdf file
 
 // Simulate slowness
-sleep(3);
+sleep(rand(2,4));
 
 // Generate PDF
 copy(sprintf('%s/shared/Invoice_Template.pdf', __DIR__), sprintf('%s/shared/generated_%s', __DIR__, $argv[1]));

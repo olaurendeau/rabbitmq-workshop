@@ -1,7 +1,8 @@
 {
     "name": "olaurendeau/api",
     "require": {
-        "swarrot/swarrot": "~2.2"
+        "swarrot/swarrot": "~2.2",
+        "swiftmailer/swiftmailer": "~5.4"
     },
     "authors": [
         {

@@ -1,47 +1,50 @@
 class App extends React.Component {
-    state = { name : null, messages: [] }
-    send = () =>  {
+    state = { email : "john.doe@foobar.com", messages: [] }
+    send = (event) =>  {
+        // Prepare request
         let request = {
             method: "createDocument",
             id: guid(),
             params: {
-                name: this.state.name
+                email: this.state.email
             }
         };
-        this.log({
-            id: request.id,
-            message: <span>Invoice request sent, please wait for a while ...</span>
-        });
+
+        // Inform user
+        this.log({type: "request", id: request.id, message: <span>Invoice request sent, please wait for a while ...</span>});
+
+        // Send request
         $.post('http://localhost:4445/api.php', JSON.stringify(request), (response) => {
-            this.log({
-                id: response.id,
-                message: <span>
-                    Your invoice have been generated,
-                    <a target="_blank" href={response.result}>download it</a>
-                </span>
+            // Display result
+            this.log({type: "response", id: response.id, message: <span>Your invoice have been generated and sent by email !,&nbsp;<a target="_blank" href="http://localhost:8025/">check email</a></span>
             });
         }, "json").fail((response) => {
-            this.log({
-                id: response.id,
-                message: <span>Failure</span>
-            });
+            // Display error
+            this.log({type: "response", id: response.responseJSON.id, message: <span>Failure : {response.responseJSON.error.message}</span>});
         });
+        event.preventDefault(); event.stopPropagation();
     }
     log = (message) => {
         this.setState({messages: [...this.state.messages, ...[message]]});
     }
-    onChange = (event) => {
-        this.setState({name: event.target.value})
+    emailChanged = (event) => {
+        this.setState({email: event.target.value})
     }
     render() {
-        return <div>
-            <label>Download invoice for order n° <input type="text" onChange={this.onChange}/> </label>
-            <input onClick={this.send} type="button" value="Submit"/>
-            {this.state.messages.map((message) => <div>
-                <span style={{backgroundColor: "#"+message.id.substr(0,6), color: "white"}}>#{message.id}</span>&nbsp;
-                {message.message}
-            </div>)}
-        </div>
+        return <form onSubmit={this.send}>
+            <h2>Send invoice</h2>
+            <div>
+                <label>Email <input type="text" onChange={this.emailChanged} defaultValue={this.state.email}/> </label><br/><br/>
+                <input type="submit" value="Send!"/>
+            </div>
+            <h2>Result</h2>
+            <div style={{fontFamily: "monospace"}}>
+                {this.state.messages.map((message) => <div key={message.type+"-"+message.id}>
+                    <span style={{backgroundColor: "#"+message.id.substr(0,6), color: "white"}}>#{message.id}</span>&nbsp;
+                    {message.message}
+                </div>)}
+            </div>
+        </form>
     }
 }
 

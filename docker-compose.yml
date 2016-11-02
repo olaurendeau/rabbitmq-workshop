@@ -6,6 +6,9 @@ api:
         - ./shared:/var/www/html/shared/
     ports:
         - 4445:80
+    links:
+        - rmq
+        - mailer
 
 web:
     image: "kyma/docker-nginx"
@@ -19,3 +22,9 @@ rmq:
     image: "rabbitmq:management"
     ports:
         - 15672:15672
+
+mailer:
+    image: "mailhog/mailhog"
+    ports:
+        - 1025:1025
+        - 8025:8025

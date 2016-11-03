@@ -1,5 +1,10 @@
 {
     "name": "olaurendeau/api",
+    "autoload": {
+        "psr-4": {
+            "": "src/"
+        }
+    },
     "require": {
         "swarrot/swarrot": "~2.2",
         "swiftmailer/swiftmailer": "~5.4"

@@ -16,13 +16,10 @@ echo json_encode($response);
 
 function createDocument($request)
 {
-    exec('php generator.php '.$request['params']['email'], $output, $returnVar);
+    $generator = new \Generator\InvoiceGenerator();
+    $generator->generateAndSend($request['params']['email']);
 
-    if ($returnVar !== 0) {
-        throw new \Exception("Invoice generation failed\n".$output[0], 500);
-    }
-
-    $response = ['id' => $request['id'], 'result' => 'pending'];
+    $response = ['id' => $request['id'], 'result' => 'success'];
 
     return $response;
 }

@@ -10,6 +10,17 @@ api:
         - rabbitmq
         - mailer
 
+worker:
+    build: ./backend/
+    command: bash -c "cd /usr/src/myapp && php worker.php"
+    volumes:
+        - ./backend/:/usr/src/myapp
+        - ./shared:/var/www/html/shared/
+    restart: always
+    links:
+        - rabbitmq
+        - mailer
+
 web:
     image: "kyma/docker-nginx"
     volumes:

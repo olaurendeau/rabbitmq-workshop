@@ -16,10 +16,10 @@ echo json_encode($response);
 
 function createDocument($request)
 {
-    $generator = new \Generator\InvoiceGenerator();
-    $generator->generateAndSend($request['params']['email']);
+    $rabbitmq = new \RabbitMQ\RabbitMQWrapper();
+    $rabbitmq->publish('amq.direct', new \Swarrot\Broker\Message(json_encode($request)));
 
-    $response = ['id' => $request['id'], 'result' => 'success'];
+    $response = ['id' => $request['id'], 'result' => 'pending'];
 
     return $response;
 }

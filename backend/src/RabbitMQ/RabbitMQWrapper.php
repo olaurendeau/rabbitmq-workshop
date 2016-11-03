@@ -27,11 +27,7 @@ class RabbitMQWrapper
 
     public function publish($exchangeName, Message $message, $routingKey = null)
     {
-        $exchange = new \AMQPExchange($this->channel);
-        $exchange->setName($exchangeName);
-
-        $messagePublisher = new PeclPackageMessagePublisher($exchange);
-        $messagePublisher->publish($message, $routingKey);
+        $this->getMessagePublisher($exchangeName)->publish($message, $routingKey);
     }
 
     public function getMessageProvider($queueName)
@@ -40,5 +36,13 @@ class RabbitMQWrapper
         $queue->setName($queueName);
 
         return new PeclPackageMessageProvider($queue);
+    }
+
+    public function getMessagePublisher($exchangeName)
+    {
+        $exchange = new \AMQPExchange($this->channel);
+        $exchange->setName($exchangeName);
+
+        return new PeclPackageMessagePublisher($exchange);
     }
 }

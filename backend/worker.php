@@ -4,6 +4,16 @@ require_once __DIR__.'/vendor/autoload.php';
 
 class JsonRpcResponseProcessor implements \Swarrot\Processor\ProcessorInterface {
 
+    /**
+     * @var \RabbitMQ\RabbitMQWrapper
+     */
+    private $rabbitMQ;
+
+    public function __construct(\RabbitMQ\RabbitMQWrapper $rabbitMQ)
+    {
+        $this->rabbitMQ = $rabbitMQ;
+    }
+
     public function process(\Swarrot\Broker\Message $message, array $options)
     {
         if (rand(0,3) == 0) {
@@ -14,6 +24,8 @@ class JsonRpcResponseProcessor implements \Swarrot\Processor\ProcessorInterface 
 
         $generator = new \Generator\InvoiceGenerator();
         $generator->generateAndSend($request['params']['email']);
+        
+        echo "Message processed\n";
     }
 }
 
@@ -24,7 +36,7 @@ $stack = (new \Swarrot\Processor\Stack\Builder())
     ->push('Swarrot\Processor\Ack\AckProcessor', $messageProvider)
 ;
 
-$processor = $stack->resolve(new JsonRpcResponseProcessor());
+$processor = $stack->resolve(new JsonRpcResponseProcessor($rabbitMQ));
 
 $consumer = new \Swarrot\Consumer($messageProvider, $processor);
 $consumer->consume(['retry_key_pattern' => 'key_%attempt%']);

@@ -15,11 +15,21 @@ worker:
     command: bash -c "cd /usr/src/myapp && php worker.php"
     volumes:
         - ./backend/:/usr/src/myapp
-        - ./shared:/var/www/html/shared/
     restart: always
     links:
         - rabbitmq
         - mailer
+
+pusher:
+    build: ./backend/
+    command: bash -c "php pusher.php"
+    volumes:
+        - ./backend/:/var/www/html/
+    ports:
+        - 4447:8080
+    restart: always
+    links:
+        - rabbitmq
 
 web:
     image: "kyma/docker-nginx"

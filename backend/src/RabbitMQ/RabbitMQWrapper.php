@@ -32,10 +32,15 @@ class RabbitMQWrapper
 
     public function getMessageProvider($queueName)
     {
+        return new PeclPackageMessageProvider($this->getAMQPQueue($queueName));
+    }
+
+    public function getAMQPQueue($queueName)
+    {
         $queue = new \AMQPQueue($this->channel);
         $queue->setName($queueName);
 
-        return new PeclPackageMessageProvider($queue);
+        return $queue;
     }
 
     public function getMessagePublisher($exchangeName)

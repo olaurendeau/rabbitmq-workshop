@@ -20,7 +20,7 @@ class JsonRpcResponseProcessor implements \Swarrot\Processor\ProcessorInterface 
 $rabbitMQ = new \RabbitMQ\RabbitMQWrapper();
 $messageProvider = $rabbitMQ->getMessageProvider('queue.document');
 $stack = (new \Swarrot\Processor\Stack\Builder())
-    ->push('Swarrot\Processor\Retry\RetryProcessor', $rabbitMQ->getMessagePublisher('retry'))
+    ->push('Swarrot\Processor\Retry\RetryProcessor', $rabbitMQ->getMessagePublisher('amq.fanout'))
     ->push('Swarrot\Processor\Ack\AckProcessor', $messageProvider)
 ;
 

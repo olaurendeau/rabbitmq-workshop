@@ -1,12 +1,25 @@
 class App extends React.Component {
-    state = { email : "john.doe@foobar.com", messages: [] }
+    state = { email : "john.doe@foobar.com", messages: [], channel: guid() }
+    componentDidMount = () => {
+        self = this;
+        var conn = new ab.Session('ws://localhost:4447', () => {
+                conn.subscribe(self.state.channel, function(channel, data) {
+                    self.log({type: "push-"+data.id, id: data.request_id, message: <span>{data.message}</span>})
+                });
+            }, () => {
+                console.warn('WebSocket connection closed');
+            },
+            {'skipSubprotocolCheck': true}
+        );
+    }
     send = (event) =>  {
         // Prepare request
         let request = {
             method: "createDocument",
             id: guid(),
             params: {
-                email: this.state.email
+                email: this.state.email,
+                channel: this.state.channel
             }
         };
 

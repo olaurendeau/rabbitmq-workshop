@@ -25,6 +25,15 @@ class JsonRpcResponseProcessor implements \Swarrot\Processor\ProcessorInterface 
         $generator = new \Generator\InvoiceGenerator();
         $generator->generateAndSend($request['params']['email']);
         
+        echo "Publish push\n";
+        $this->rabbitMQ->publish('amq.topic', new \Swarrot\Broker\Message(json_encode([
+            'id' => uniqid(),
+            'channel' => $request['params']['channel'],
+            'request_id' => $request['id'],
+            'message' => 'Invoice generated and sent by mail to '.$request['params']['email']
+        ])), 'push.'.$request['params']['channel']);
+
+
         echo "Message processed\n";
     }
 }

@@ -33,6 +33,8 @@ class Logger
         // Push log over RabbitMQ
         $this->rabbitMQ->publish('amq.topic', new \Swarrot\Broker\Message(json_encode([
             'id' => uniqid(),
+            'request_id' => $request['id'],
+            'channel' => $request['params']['channel'],
             'message' => $log
         ])), 'log.'.$this->application);
 

@@ -20,9 +20,9 @@ class Server
         $request = json_decode(file_get_contents('php://input'), true);
         try {
             $response = $this->{$request['method']}($request);
-            $this->logger->log($request['id'], $response['result']);
+            $this->logger->log($request, $response['result']);
         } catch (\Exception $e) {
-            $this->logger->log($request['id'], $e->getMessage());
+            $this->logger->log($request, $e->getMessage());
             http_response_code(500);
             $response = ['id' => $request['id'], 'error' => ['code' => $e->getCode(), 'message' => $e->getMessage()]];
         }

@@ -1,0 +1,21 @@
+delete_allowed: true # Allow deletion of exchange, queues and binding for updating configuration. Shouldn't be enabled in production
+connections:
+    default: http://guest:guest@rabbitmq:15672
+vhosts:
+    default:
+        name: /
+        queues:
+            queue.document:
+                bindings:
+                    - { exchange: amq.direct }
+                    - { exchange: amq.direct, routing_key: "bidon" }
+            queue.document.retry:
+                arguments:
+                    x-message-ttl: 5000
+                    x-dead-letter-exchange: amq.direct
+                    x-dead-letter-routing-key: bidon
+                bindings:
+                    - { exchange: amq.fanout }
+            queue.push:
+                bindings:
+                    - { exchange: amq.topic, routing_key: "#"}

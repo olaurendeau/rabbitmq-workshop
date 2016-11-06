@@ -21,9 +21,9 @@ class JsonRpcResponseProcessor implements \Swarrot\Processor\ProcessorInterface
         }
 
         $generator = new \Generator\InvoiceGenerator($this->logger);
-        $generator->generateAndSend($request['id'], $request['params']['email']);
+        $generator->generateAndSend($request, $request['params']['email']);
 
-        $this->logger->log($request['id'], "Message processed");
+        $this->logger->log($request, "Message processed");
     }
 }
 

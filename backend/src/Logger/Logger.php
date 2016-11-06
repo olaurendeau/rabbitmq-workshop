@@ -17,15 +17,15 @@ class Logger
     }
 
     /**
-     * @param string $requestId Identifier of the request
+     * @param array $request Request
      * @param string $message message to log
      */
-    public function log($requestId, $message)
+    public function log($request, $message)
     {
         $log = sprintf(
             "[%s] %s [%s] %s\n",
             (new \DateTime)->format('H:i:s'),
-            $requestId,
+            $request['id'],
             $this->application,
             ucfirst($message)
         );

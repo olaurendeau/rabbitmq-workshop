@@ -15,7 +15,7 @@ class JsonRpcResponseProcessor implements \Swarrot\Processor\ProcessorInterface
     {
         $request = json_decode($message->getBody(), true);
 
-        $this->logger->log($request['id'], "Message processed");
+        $this->logger->log($request, "Message processed");
     }
 }
 

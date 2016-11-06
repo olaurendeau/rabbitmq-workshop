@@ -13,9 +13,9 @@ class InvoiceGenerator
         $this->logger = $logger;
     }
 
-    public function generateAndSend($requestId, $email)
+    public function generateAndSend($request, $email)
     {
-        $this->logger->log($requestId, "Generating invoice");
+        $this->logger->log($request, "Generating invoice");
         sleep(rand(2,4));
 
         // Send email
@@ -27,6 +27,6 @@ class InvoiceGenerator
         ;
         $mailer->send($message);
 
-        $this->logger->log($requestId, "Invoice sent by email");
+        $this->logger->log($request, "Invoice sent by email");
     }
 }

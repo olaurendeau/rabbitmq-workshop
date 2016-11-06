@@ -16,7 +16,7 @@ class JsonRpcResponseProcessor implements \Swarrot\Processor\ProcessorInterface
         $request = json_decode($message->getBody(), true);
 
         if (rand(0,3) == 0) {
-            $this->logger->log($request['id'], "Treatment failed");
+            $this->logger->log($request, "Treatment failed");
             throw new \Exception('Epic fail');
         }
 

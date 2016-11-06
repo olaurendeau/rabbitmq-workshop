@@ -29,7 +29,7 @@ class App extends React.Component {
         // Send request
         $.post('http://localhost:4445/api.php', JSON.stringify(request), (response) => {
             // Display result
-            this.log({type: "response", id: response.id, message: <span>Your invoice have been generated and sent by email !,&nbsp;<a target="_blank" href="http://localhost:8025/">check email</a></span>
+            this.log({type: "response", id: response.id, message: <span>Your invoice will be generated soon and sent by email !,&nbsp;<a target="_blank" href="http://localhost:8025/">check email</a></span>
             });
         }, "json").fail((response) => {
             // Display error

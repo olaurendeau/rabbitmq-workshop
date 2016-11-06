@@ -1,3 +1,13 @@
+web:
+    image: "kyma/docker-nginx"
+    volumes:
+        - ./web/:/var/www
+        - ./shared:/var/www/shared/
+    ports:
+        - 4446:80
+    links:
+        - api
+
 api:
     build: ./backend/
     command: bash -c "php composer.phar install && apache2-foreground"
@@ -30,16 +40,6 @@ pusher:
     restart: always
     links:
         - rabbitmq
-
-web:
-    image: "kyma/docker-nginx"
-    volumes:
-        - ./web/:/var/www
-        - ./shared:/var/www/shared/
-    ports:
-        - 4446:80
-    links:
-        - api
 
 rabbitmq:
     image: "rabbitmq:management"

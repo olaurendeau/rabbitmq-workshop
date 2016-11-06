@@ -2,7 +2,7 @@
 
 require_once __DIR__.'/vendor/autoload.php';
 
-class JsonRpcResponseProcessor implements \Swarrot\Processor\ProcessorInterface
+class InvoiceProcessor implements \Swarrot\Processor\ProcessorInterface
 {
     private $logger;
 
@@ -31,7 +31,7 @@ $stack = (new \Swarrot\Processor\Stack\Builder())
     ->push('Swarrot\Processor\Ack\AckProcessor', $messageProvider)
 ;
 
-$processor = $stack->resolve(new JsonRpcResponseProcessor($logger));
+$processor = $stack->resolve(new InvoiceProcessor($logger));
 
 $consumer = new \Swarrot\Consumer($messageProvider, $processor);
 $consumer->consume();

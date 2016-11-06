@@ -32,15 +32,10 @@ class RabbitMQWrapper
 
     public function getMessageProvider($queueName)
     {
-        return new PeclPackageMessageProvider($this->getAMQPQueue($queueName));
-    }
-
-    public function getAMQPQueue($queueName)
-    {
         $queue = new \AMQPQueue($this->channel);
         $queue->setName($queueName);
 
-        return $queue;
+        return new PeclPackageMessageProvider($queue);
     }
 
     public function getMessagePublisher($exchangeName)
@@ -49,5 +44,16 @@ class RabbitMQWrapper
         $exchange->setName($exchangeName);
 
         return new PeclPackageMessagePublisher($exchange);
+    }
+
+    public function createTemporaryQueue($queueName, $bindings)
+    {
+        $queue = new \AMQPQueue($this->channel);
+        $queue->setName($queueName);
+        $queue->setArgument('x-expires', 10000);
+        $queue->declareQueue();
+        foreach ($bindings as $exchangeName => $routingKey) {
+            $queue->bind($exchangeName, $routingKey);
+        }
     }
 }

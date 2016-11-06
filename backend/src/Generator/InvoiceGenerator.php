@@ -2,10 +2,20 @@
 
 namespace Generator;
 
+use Logger\Logger;
+
 class InvoiceGenerator
 {
-    public function generateAndSend($email)
+    private $logger;
+
+    public function __construct(Logger $logger)
     {
+        $this->logger = $logger;
+    }
+
+    public function generateAndSend($requestId, $email)
+    {
+        $this->logger->log($requestId, "Generating invoice");
         sleep(rand(2,4));
 
         // Send email
@@ -16,5 +26,7 @@ class InvoiceGenerator
             ->setBody('Please download your invoice at http://localhost:4446/shared/Invoice_Template.pdf !')
         ;
         $mailer->send($message);
+
+        $this->logger->log($requestId, "Invoice sent by email");
     }
 }

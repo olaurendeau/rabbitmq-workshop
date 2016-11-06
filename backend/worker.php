@@ -2,16 +2,13 @@
 
 require_once __DIR__.'/vendor/autoload.php';
 
-class JsonRpcResponseProcessor implements \Swarrot\Processor\ProcessorInterface {
+class JsonRpcResponseProcessor implements \Swarrot\Processor\ProcessorInterface
+{
+    private $logger;
 
-    /**
-     * @var \RabbitMQ\RabbitMQWrapper
-     */
-    private $rabbitMQ;
-
-    public function __construct(\RabbitMQ\RabbitMQWrapper $rabbitMQ)
+    public function __construct(\Logger\Logger $logger)
     {
-        $this->rabbitMQ = $rabbitMQ;
+        $this->logger = $logger;
     }
 
     public function process(\Swarrot\Broker\Message $message, array $options)
@@ -22,21 +19,23 @@ class JsonRpcResponseProcessor implements \Swarrot\Processor\ProcessorInterface 
 
         $request = json_decode($message->getBody(), true);
 
-        $generator = new \Generator\InvoiceGenerator();
-        $generator->generateAndSend($request['params']['email']);
-        
-        echo "Message processed\n";
+        $generator = new \Generator\InvoiceGenerator($this->logger);
+        $generator->generateAndSend($request['id'], $request['params']['email']);
+
+        $this->logger($request['id'], "Message processed");
     }
 }
 
 $rabbitMQ = new \RabbitMQ\RabbitMQWrapper();
+$logger = new \Logger\Logger('worker', $rabbitMQ);
+
 $messageProvider = $rabbitMQ->getMessageProvider('queue.document');
 $stack = (new \Swarrot\Processor\Stack\Builder())
     ->push('Swarrot\Processor\Retry\RetryProcessor', $rabbitMQ->getMessagePublisher('amq.fanout'))
     ->push('Swarrot\Processor\Ack\AckProcessor', $messageProvider)
 ;
 
-$processor = $stack->resolve(new JsonRpcResponseProcessor($rabbitMQ));
+$processor = $stack->resolve(new JsonRpcResponseProcessor($logger));
 
 $consumer = new \Swarrot\Consumer($messageProvider, $processor);
 $consumer->consume(['retry_key_pattern' => 'key_%attempt%']);

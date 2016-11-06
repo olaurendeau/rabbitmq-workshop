@@ -31,8 +31,7 @@ class Server
 
     protected function createDocument($request)
     {
-        $rabbitmq = new \RabbitMQ\RabbitMQWrapper();
-        $rabbitmq->publish('amq.direct', new \Swarrot\Broker\Message(json_encode($request)));
+        $this->rabbitmq->publish('amq.direct', new \Swarrot\Broker\Message(json_encode($request)));
 
         $response = ['id' => $request['id'], 'result' => 'pending'];
 

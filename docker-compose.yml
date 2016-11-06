@@ -41,6 +41,15 @@ pusher:
     links:
         - rabbitmq
 
+command:
+    build: ./backend/
+    volumes:
+        - ./backend/:/var/www/html/
+    tty: true
+    stdin_open: true
+    links:
+        - rabbitmq
+
 rabbitmq:
     image: "rabbitmq:management"
     ports:

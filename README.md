@@ -66,6 +66,6 @@ Run `docker-compose restart worker pusher` to restart worker & pusher
 
 ### 6 - Configuration
 
-Have a look at https://github.com/olaurendeau/rabbit-mq-admin-toolkit-cli readme and define a `.rabbit-mq-admin-toolkit.yml` defining our rabbitmq objects configuration
+Have a look at https://github.com/olaurendeau/rabbit-mq-admin-toolkit-cli readme and define a `.rabbit-mq-admin-toolkit.yml` file defining our rabbitmq objects configuration
 
 Run `docker-compose run command php rabbit-mq-admin-toolkit.phar define`

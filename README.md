@@ -4,9 +4,8 @@
 
 1. [Install docker](https://www.docker.com/products/overview#/install_the_platform) & [Install docker-compose](https://docs.docker.com/compose/install/)
 2. Clone this repository somewhere `git clone git@github.com:olaurendeau/rabbitmq-workshop.git && cd rabbitmq-workshop`
-3. Build containers `docker-compose build`
-4. Run containers in background `docker-compose up -d`
-5. Check if :
+3. Run containers in background `docker-compose up -d`
+4. Check if :
   * app is properly working at [http://localhost:4446/](http://localhost:4446/)
   * RabbitMQ management interface is available at [http://guest:guest@localhost:15672/#/queues](http://guest:guest@localhost:15672/#/queues)
 

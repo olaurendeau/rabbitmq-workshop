@@ -2,7 +2,7 @@
 
 ## Installation
 
-1. [Install docker](https://www.docker.com/products/overview#/install_the_platform)
+1. [Install docker](https://www.docker.com/products/overview#/install_the_platform) & [Install docker-compose](https://docs.docker.com/compose/install/)
 2. Clone this repository somewhere `git clone git@github.com:olaurendeau/rabbitmq-workshop.git && cd rabbitmq-workshop`
 3. Build containers `docker-compose build`
 4. Run containers in background `docker-compose up -d`

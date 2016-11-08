@@ -12,14 +12,15 @@ class LogProcessor implements \Swarrot\Processor\ProcessorInterface
     }
 }
 
-if (!isset($argv[1])) {
-    exit("Please specify a routing key to listen on\n Example : php log-catcher.php \"#\"");
+$routingKey = "#";
+if (isset($argv[1])) {
+    $routingKey = "log.".$argv[1];
 }
 
 $rabbitMQ = new \RabbitMQ\RabbitMQWrapper();
 
 $queueName = 'queue.log-catcher.'.uniqid();
-$rabbitMQ->createTemporaryQueue($queueName, ['amq.topic' => $argv[1]]);
+$rabbitMQ->createTemporaryQueue($queueName, ['amq.topic' => $routingKey]);
 
 $messageProvider = $rabbitMQ->getMessageProvider($queueName);
 $stack = (new \Swarrot\Processor\Stack\Builder())

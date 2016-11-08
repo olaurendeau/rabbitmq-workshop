@@ -4,7 +4,7 @@
 
 1. [Install docker](https://www.docker.com/products/overview#/install_the_platform) & [Install docker-compose](https://docs.docker.com/compose/install/)
 2. Clone this repository somewhere `git clone git@github.com:olaurendeau/rabbitmq-workshop.git && cd rabbitmq-workshop`
-3. Run containers in background `docker-compose start`
+3. Run containers in background `docker-compose up -d`
 4. Check if :
   * app is properly working at [http://localhost:4446/](http://localhost:4446/)
   * RabbitMQ management interface is available at [http://guest:guest@localhost:15672/#/queues](http://guest:guest@localhost:15672/#/queues)
@@ -13,7 +13,7 @@
 
 ### Docker
 
-* `docker-compose start` build and run as daemon all containers define in [`docker-compose.yml`](https://github.com/olaurendeau/rabbitmq-workshop/blob/master/docker-compose.yml)
+* `docker-compose up -d` build and run as daemon all containers define in [`docker-compose.yml`](https://github.com/olaurendeau/rabbitmq-workshop/blob/master/docker-compose.yml)
 * `docker-compose restart {container}` restart a daemonized container e.g. `docker-compose restart worker` will restart the container `worker`
 * `docker-compose logs -f {container}` display logs of a container e.g. `docker-compose logs -f worker` show logs of all container of type `worker`
 * `docker-compose scale {container}={instance number}` e.g. `docker-composer scale worker=5` will daemonize 5 container of type `worker`

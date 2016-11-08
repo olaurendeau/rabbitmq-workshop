@@ -9,6 +9,36 @@
   * app is properly working at [http://localhost:4446/](http://localhost:4446/)
   * RabbitMQ management interface is available at [http://guest:guest@localhost:15672/#/queues](http://guest:guest@localhost:15672/#/queues)
 
+## Cheat sheet
+
+### Docker
+
+* `docker-compose up -d` build and run as daemon all containers define in [`docker-compose.yml`](https://github.com/olaurendeau/rabbitmq-workshop/blob/master/docker-compose.yml)
+* `docker-compose restart {container}` restart a daemonized container e.g. `docker-compose restart worker` will restart the container `worker`
+* `docker-compose logs -f {container}` display logs of a container e.g. `docker-compose logs -f worker` show logs of all container of type `worker`
+* `docker-compose scale {container}={instance number}` e.g. `docker-composer scale worker=5` will daemonize 5 container of type `worker`
+* `docker-compose run {container} {command}` e.g. `docker-compose run command php script.php` will run the command `php script.php` on the container `command`
+
+### RabbitMQWrapper
+
+* Publish a message `$rabbitmq->publish('exchangeName', new \Swarrot\Broker\Message(json_encode(['id' => uniqid(), ...])));`
+* Create a temporary queue `$rabbitMQ->createTemporaryQueue('queue.log-catcher.'.uniqid(), ['exchangeName' => 'routingKey']);`
+
+### Request / Response format
+
+Request
+```json
+{
+  "id":"894f8ad6-bbae-eb53-6fe3-f35c3e24e537", # UUID
+  "method":"sendVerySlowEmail", # API method
+  "params":{
+    "email":"john.doe@foobar.com", # Email 
+    "channel":"14fa8b0c-945f-d52d-5e18-d91d37479de1"
+  }
+}
+```
+
+
 ## Workshop
 
 ### 1 - Asynchronize request

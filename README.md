@@ -11,6 +11,17 @@
 
 ## Cheat sheet
 
+### Do not get stucked !
+
+All step are implemented in the following branches :
+- master : code base
+- step1/asynchronize-request : Step 1 implemented
+- step2/fill-the-gap : Step 2 implemented
+- step3/handle-failures : Step 3 implemented
+- step4/dispatch-events : Step 4 implemented
+- step5/push : Step 5 implemented
+- step6/configuration : Step 6 implemented
+
 ### Docker
 
 * `docker-compose up -d` build and run as daemon all containers define in [`docker-compose.yml`](https://github.com/olaurendeau/rabbitmq-workshop/blob/master/docker-compose.yml)
@@ -72,11 +83,18 @@ Scale workers `docker-compose scale worker=5`
 
 ### 3 - Handle failures
 
-In `backend/worker.php` randomly fail the processor by sending an exception
+In `backend/worker.php` randomly (1 over 4) fail the processor by sending an exception
 
-Swarrot library propose a [retry processor](https://github.com/swarrot/swarrot/tree/master/src/Swarrot/Processor/Retry), replace the ExceptionCatcherProcessor with the RetryProcessor
+Swarrot library propose a [retry processor](https://github.com/swarrot/swarrot/tree/master/src/Swarrot/Processor/Retry), replace `Swarrot\Processor\ExceptionCatcher\ExceptionCatcherProcessor` with the `Swarrot\Processor\Retry\RetryProcessor`.
+RetryProcessor will need a [`MessagePublisherInterface`](https://github.com/olaurendeau/rabbitmq-workshop/blob/master/backend/src/RabbitMQ/RabbitMQWrapper.php#L45-L51) to publish failed messages on `amq.fanout` exchange.
 
-Some queue & bindings definitions should be done
+If stucked see [https://github.com/olaurendeau/rabbitmq-workshop/blob/step3/handle-failures/backend/worker.php](https://github.com/olaurendeau/rabbitmq-workshop/blob/step3/handle-failures/backend/worker.php)
+
+In management UI, create a new queue `queue.document.retry` with following arguments :
+* x-message-ttl:	5000
+* x-dead-letter-exchange:	amq.direct
+* x-dead-letter-routing-key:	
+And bind it to `amq.fanout` exchange
 
 Run `docker-compose restart worker` to restart worker
 

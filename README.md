@@ -11,6 +11,17 @@
 
 ## Cheat sheet
 
+### Do not get stucked !
+
+All step are implemented in the following branches :
+- master : code base
+- step1/asynchronize-request : Step 1 implemented
+- step2/fill-the-gap : Step 2 implemented
+- step3/handle-failures : Step 3 implemented
+- step4/dispatch-events : Step 4 implemented
+- step5/push : Step 5 implemented
+- step6/configuration : Step 6 implemented
+
 ### Docker
 
 * `docker-compose up -d` build and run as daemon all containers define in [`docker-compose.yml`](https://github.com/olaurendeau/rabbitmq-workshop/blob/master/docker-compose.yml)
@@ -72,11 +83,19 @@ Scale workers `docker-compose scale worker=5`
 
 ### 3 - Handle failures
 
-In `backend/worker.php` randomly fail the processor by sending an exception
+In `backend/worker.php` randomly (1 over 4) fail the processor by sending an exception
 
-Swarrot library propose a [retry processor](https://github.com/swarrot/swarrot/tree/master/src/Swarrot/Processor/Retry), replace the ExceptionCatcherProcessor with the RetryProcessor
+Swarrot library propose a [retry processor](https://github.com/swarrot/swarrot/tree/master/src/Swarrot/Processor/Retry), replace `Swarrot\Processor\ExceptionCatcher\ExceptionCatcherProcessor` with the `Swarrot\Processor\Retry\RetryProcessor`.
+RetryProcessor will need a [`MessagePublisherInterface`](https://github.com/olaurendeau/rabbitmq-workshop/blob/master/backend/src/RabbitMQ/RabbitMQWrapper.php#L45-L51) to publish failed messages on `amq.fanout` exchange.
 
-Some queue & bindings definitions should be done
+If stucked see [https://github.com/olaurendeau/rabbitmq-workshop/blob/step3/handle-failures/backend/worker.php](https://github.com/olaurendeau/rabbitmq-workshop/blob/step3/handle-failures/backend/worker.php)
+
+In management UI, create a new queue `queue.document.retry` with following arguments :
+* x-message-ttl:	5000
+* x-dead-letter-exchange:	amq.direct
+* x-dead-letter-routing-key:	
+
+And bind it to `amq.fanout` exchange
 
 Run `docker-compose restart worker` to restart worker
 
@@ -84,13 +103,15 @@ Run `docker-compose restart worker` to restart worker
 
 In `backend/src/Logger/Logger.php` publish messages like `{"id": "1234", "message": "[18:21:26] afe4da94-55bf-4dd0-1a3c-e38e03dbb8ac [worker] Message processed"}` on exchange `amq.topic` with routing key `log.{application}`
 
-Copy `backend/worker.php` to a `backend/log-catcher.php`, build a LogProcessor echoing the message, define a temporary queue with a unique name and a customizable binding with `backend/src/RabbitMQ/RabbitMQWrapper::createTemporaryQueue` and consume from that queue.
+Copy `backend/worker.php` to a `backend/log-catcher.php`, build a LogProcessor that define a temporary queue with a unique name binded to `amq.topic` with default routing key `#` with `backend/src/RabbitMQ/RabbitMQWrapper::createTemporaryQueue`, consume from that queue and write the log message to standard output.
 
 Run `docker-compose restart worker` to restart worker
 
 Run `docker-compose run command bash` to ssh on command container
 
-Play with `php log-catcher.php "#"`
+Play with `php log-catcher.php`
+
+Optionnaly your script can take an application name as argument to filter on routing_key when binding the queue to exchange
 
 ### 5 - Push
 

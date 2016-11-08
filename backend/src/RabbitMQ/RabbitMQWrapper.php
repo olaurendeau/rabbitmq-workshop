@@ -13,6 +13,11 @@ class RabbitMQWrapper
 
     public function __construct($params = null)
     {
+        $this->connect();
+    }
+
+    private function connect()
+    {
         // Create connection & channel
         $this->connection = new \AMQPConnection($params !== null ? $params : [
             'host' => 'rabbitmq',
@@ -36,8 +41,19 @@ class RabbitMQWrapper
         $queue->setName($queueName);
 
         // Create queue in case it does not exists
-        $queue->setFlags(AMQP_DURABLE);
-        $queue->declareQueue();
+        try {
+            $message = $queue->get();
+            if ($message) {
+                $queue->nack($message->getDeliveryTag(), AMQP_REQUEUE);
+            }
+        } catch (\AMQPQueueException $e) {
+            $this->connect();
+
+            $queue = new \AMQPQueue($this->channel);
+            $queue->setName($queueName);
+            $queue->setFlags(AMQP_DURABLE);
+            $queue->declareQueue();
+        }
 
         return new PeclPackageMessageProvider($queue);
     }

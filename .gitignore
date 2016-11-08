@@ -1,7 +1,7 @@
 */vendor/
 shared/generated_*
 .DS_Store
-*/logs/*
+/logs/*
 
 # Commit your application's lock file http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file
 # You may choose to ignore a library lock file http://getcomposer.org/doc/02-libraries.md#lock-file

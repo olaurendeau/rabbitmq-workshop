@@ -15,8 +15,8 @@ class InvoiceProcessor implements \Swarrot\Processor\ProcessorInterface
     {
         $request = json_decode($message->getBody(), true);
 
-        $generator = new \Generator\InvoiceGenerator($this->logger);
-        $generator->generateAndSend($request, $request['params']['email']);
+        $generator = new \Mailer\Sender($this->logger);
+        $generator->sendVerySlowEmail($request);
 
         $this->logger->log($request, "Message processed");
     }

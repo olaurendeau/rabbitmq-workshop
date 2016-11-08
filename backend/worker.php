@@ -22,7 +22,7 @@ class InvoiceProcessor implements \Swarrot\Processor\ProcessorInterface
 $rabbitMQ = new \RabbitMQ\RabbitMQWrapper();
 $logger = new \Logger\Logger('worker', $rabbitMQ);
 
-$messageProvider = $rabbitMQ->getMessageProvider('queue');
+$messageProvider = $rabbitMQ->getMessageProvider('queue.document');
 $stack = (new \Swarrot\Processor\Stack\Builder())
     ->push('Swarrot\Processor\ExceptionCatcher\ExceptionCatcherProcessor')
     ->push('Swarrot\Processor\Ack\AckProcessor', $messageProvider)

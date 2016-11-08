@@ -35,6 +35,10 @@ class RabbitMQWrapper
         $queue = new \AMQPQueue($this->channel);
         $queue->setName($queueName);
 
+        // Create queue in case it does not exists
+        $queue->setFlags(AMQP_DURABLE);
+        $queue->declareQueue();
+
         return new PeclPackageMessageProvider($queue);
     }
 

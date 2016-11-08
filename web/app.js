@@ -15,7 +15,7 @@ class App extends React.Component {
     send = (event) =>  {
         // Prepare request
         let request = {
-            method: "createDocument",
+            method: "sendVerySlowEmail",
             id: guid(),
             params: {
                 email: this.state.email,

@@ -1,63 +1,66 @@
-web:
-    image: "kyma/docker-nginx"
-    volumes:
-        - ./web/:/var/www
-        - ./shared:/var/www/shared/
-    ports:
-        - 4446:80
-    links:
-        - api
+version: '2'
+services:
+    web:
+        image: "kyma/docker-nginx"
+        volumes:
+            - ./web/:/var/www
+            - ./shared:/var/www/shared/
+        ports:
+            - 4446:80
+        links:
+            - api
 
-api:
-    build: ./backend/
-    command: bash -c "composer install --prefer-dist && apache2-foreground"
-    volumes:
-        - ./backend/:/var/www/html/
-        - ./shared:/var/www/html/shared/
-    ports:
-        - 4445:80
-    links:
-        - rabbitmq
-        - mailer
+    api:
+        image: backend
+        build: ./backend/
+        command: bash -c "composer install --prefer-dist && apache2-foreground"
+        volumes:
+            - ./backend/:/var/www/html/
+            - ./shared:/var/www/html/shared/
+        ports:
+            - 4445:80
+        links:
+            - rabbitmq
+            - mailer
 
-worker:
-    build: ./backend/
-    command: bash -c "cd /usr/src/myapp && php worker.php"
-    volumes:
-        - ./backend/:/usr/src/myapp
-    restart: always
-    links:
-        - rabbitmq
-        - mailer
+    worker:
+        image: backend
+        command: bash -c "cd /usr/src/myapp && php worker.php"
+        volumes:
+            - ./backend/:/usr/src/myapp
+        restart: always
+        links:
+            - rabbitmq
+            - mailer
 
-pusher:
-    build: ./backend/
-    command: bash -c "php pusher.php"
-    volumes:
-        - ./backend/:/var/www/html/
-    ports:
-        - 4447:8080
-    restart: always
-    links:
-        - rabbitmq
+    pusher:
+        image: backend
+        command: bash -c "php pusher.php"
+        volumes:
+            - ./backend/:/var/www/html/
+        ports:
+            - 4447:8080
+        restart: always
+        links:
+            - rabbitmq
 
-command:
-    build: ./backend/
-    volumes:
-        - ./backend/:/var/www/html/
-    tty: true
-    stdin_open: true
-    links:
-        - rabbitmq
+    command:
+        image: backend
+        volumes:
+            - ./backend/:/var/www/html/
+        tty: true
+        stdin_open: true
+        links:
+            - rabbitmq
 
-rabbitmq:
-    image: "rabbitmq:management"
-    ports:
-        - 5672:5672
-        - 15672:15672
+    rabbitmq:
+        image: "rabbitmq:management"
+        ports:
+            - 5672:5672
+            - 15672:15672
 
-mailer:
-    image: "mailhog/mailhog"
-    ports:
-        - 1025:1025
-        - 8025:8025
+    mailer:
+        image: "mailhog/mailhog"
+        ports:
+            - 1025:1025
+            - 8025:8025

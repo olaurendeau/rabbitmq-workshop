@@ -10,7 +10,7 @@ web:
 
 api:
     build: ./backend/
-    command: bash -c "php composer.phar install && apache2-foreground"
+    command: bash -c "composer install --prefer-dist && apache2-foreground"
     volumes:
         - ./backend/:/var/www/html/
         - ./shared:/var/www/html/shared/

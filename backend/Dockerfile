@@ -9,6 +9,14 @@ RUN wget https://github.com/alanxz/rabbitmq-c/releases/download/v0.5.2/rabbitmq-
 RUN pecl install amqp \
     && rm -rf /tmp/*
 
+RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" && \
+    php composer-setup.php && \
+    php -r "unlink('composer-setup.php');" && \
+    chmod +x composer.phar && \
+    mv composer.phar /usr/local/bin/composer
+
+RUN composer global require "hirak/prestissimo:^0.3"
+
 RUN echo "extension=amqp.so" > "$PHP_INI_DIR/conf.d/ext-amqp.ini"
 
 

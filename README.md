@@ -103,7 +103,7 @@ Run `docker-compose restart worker` to restart worker
 
 In `backend/src/Logger/Logger.php` publish messages like `{"id": "1234", "message": "[18:21:26] afe4da94-55bf-4dd0-1a3c-e38e03dbb8ac [worker] Message processed"}` on exchange `amq.topic` with routing key `log.{application}`
 
-Copy `backend/worker.php` to a `backend/log-catcher.php`, build a LogProcessor that define a temporary queue with a unique name binded to `amq.topic` with default routing key `#` with `backend/src/RabbitMQ/RabbitMQWrapper::createTemporaryQueue`, consume from that queue and write the log message to standard output.
+Copy `backend/worker.php` to a `backend/log-catcher.php`, build a LogProcessor that define a temporary queue with a unique name binded to `amq.topic` with default routing key `#` using `backend/src/RabbitMQ/RabbitMQWrapper::createTemporaryQueue`, consume from that queue and write the log message to standard output.
 
 Run `docker-compose restart worker` to restart worker
 

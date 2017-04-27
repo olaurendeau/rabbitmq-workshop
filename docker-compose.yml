@@ -11,7 +11,6 @@ services:
             - api
 
     api:
-        image: backend
         build: ./backend/
         command: bash -c "composer install --prefer-dist && apache2-foreground"
         volumes:
@@ -24,7 +23,7 @@ services:
             - mailer
 
     worker:
-        image: backend
+        build: ./backend/
         command: bash -c "cd /usr/src/myapp && php worker.php"
         volumes:
             - ./backend/:/usr/src/myapp
@@ -34,7 +33,7 @@ services:
             - mailer
 
     pusher:
-        image: backend
+        build: ./backend/
         command: bash -c "php pusher.php"
         volumes:
             - ./backend/:/var/www/html/
@@ -45,7 +44,7 @@ services:
             - rabbitmq
 
     command:
-        image: backend
+        build: ./backend/
         volumes:
             - ./backend/:/var/www/html/
         tty: true
